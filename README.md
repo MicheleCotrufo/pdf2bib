@@ -12,11 +12,12 @@ pdf2bib can be used either from [command line](#command-line-usage), or inside y
 
 [![Downloads](https://pepy.tech/badge/pdf2doi)](https://pepy.tech/project/pdf2doi?versions=0.4&versions=0.5&versions=0.6)[![Downloads](https://pepy.tech/badge/pdf2doi/month)](https://pepy.tech/project/pdf2doi?versions=0.4&versions=0.5&versions=0.6)
 [![Pip Package](https://img.shields.io/pypi/v/pdf2doi?logo=PyPI)](https://pypi.org/project/pdf2doi)
-
+-->
 ## Table of Contents
  - [Description](#description)
  - [Installation](#installation)
  - [Usage](#usage)
+ <!---
     * [Command line usage](#command-line-usage)
         + [Generate list of bibtex entries from command line](#generate-list-of-bibtex-entries-from-command-line)
         + [Manually associate the correct identifier to a file from command line](#manually-associate-the-correct-identifier-to-a-file-from-command-line)
@@ -68,18 +69,18 @@ In this way, ```pdf2doi``` will always retrieve the correct DOI in future reques
 for other bibliographic purposes.
 
 Currently, only the format of arXiv identifiers in use after [1 April 2007](https://arxiv.org/help/arxiv_identifier) is supported.
-
+-->
 ## Installation
-[![Pip Package](https://img.shields.io/pypi/v/pdf2doi?logo=PyPI)](https://pypi.org/project/pdf2doi)
+<!---[![Pip Package](https://img.shields.io/pypi/v/pdf2doi?logo=PyPI)](https://pypi.org/project/pdf2doi)-->
 
-Use the package manager pip to install pdf2doi.
+Use the package manager pip to install pdf2bib.
 
 ```bash
-pip install pdf2doi
+pip install pdf2bib
 ```
 
 Under Windows, it is also possible to add [shortcuts to the right-click context menu](#installing-the-shortcuts-in-the-right-click-context-menu-of-windows).
-
+<!---
 ## Usage
 
 pdf2doi can be used either as a [stand-alone application](#command-line-usage) invoked from the command line, or by [importing it in your python project](#usage-inside-a-python-script) or, only for Windows, 
