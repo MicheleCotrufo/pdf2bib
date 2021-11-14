@@ -1,0 +1,17 @@
+/env/
+/.vs/
+/build/
+/tests/
+/_examples*
+# Compiled python modules.
+*.pyc
+
+# Setuptools distribution folder.
+/dist/
+
+# Python egg metadata, regenerated from source files by setuptools.
+/*.egg-info
+
+.google-cookie
+.pypi
+test.py

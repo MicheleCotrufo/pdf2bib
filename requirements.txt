@@ -1,0 +1,5 @@
+bibtexparser>=1.2.0
+pyperclip
+easygui
+unidecode
+pdf2doi==1.0rc1
