@@ -1,5 +1,6 @@
 import configparser
 import os
+import logging
 
 ''' 
 method_dxdoiorg                         It sets which method is used by the library pdf2doi when querying dx.doi.org to retrieve the bibtex info
@@ -30,6 +31,13 @@ class config():
              config.__params[name] = value
         else:
             raise NameError("Name not accepted in set() method")
+        #Here we define additional actions to perform when specific parameters are modified
+        if name == 'verbose':
+            # We change the logger verbosity
+            if value: loglevel = logging.INFO
+            else: loglevel = logging.CRITICAL
+            logger = logging.getLogger("pdf2bib")
+            logger.setLevel(level=loglevel)
 
     @staticmethod
     def ReadParamsINIfile():

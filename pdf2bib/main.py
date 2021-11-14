@@ -4,10 +4,42 @@ from os import path, listdir
 import pdf2bib.bibtex_makers as bibtex_makers
 import pdf2bib.config as config
 import pdf2doi
-#import pyperclip Modules that are commented here are imported later only when needed, to improve start up time
+#import pyperclip (Modules that are commented here are imported later only when needed, to improve start up time)
 
 def pdf2bib(target):
-    ''' This is the main routine of the library. When the library is used as a command-line tool (via the entry-point "pdf2bib") 
+    ''' 
+    This is the main routine of the library. When the library is used as a command-line tool (via the entry-point "pdf2bib") the input arguments
+    are collected, validated and sent to this function (see the function main() below). Alternatively, the function can be called from a Python
+    script by importing pdf2bib. The output is a dictionary (or a list of dictionaries if multiple files are target) which contains, for each file, 
+    all the info returned by the library pdf2doi, plus additional bibtex raw data and bibtex entry.
+
+        Example:
+        import pdf2bib
+        path = r"Path\to\folder"
+        result = pdf2bib.pdf2bib(path)
+        print(result[0]['metadata']             # Dictionary containing bibtex data
+        print(result[0]['bibtex']               # A string containing a valid bibtex entry
+
+    Parameters
+    ----------
+    target : string
+        Relative or absolute path of a .pdf file or a directory containing pdf files
+
+    Returns
+    -------
+    results, dictionary or list of dictionaries (or None if an error occured)
+        The output is a single dictionary if target is a file, or a list of dictionaries if target is a directory, 
+        each element of the list describing one file. Each dictionary has the following keys
+        
+        result['identifier']        = DOI or other identifier (or None if nothing is found)
+        result['identifier_type']   = String specifying the type of identifier (e.g. 'doi' or 'arxiv')
+        result['validation_info']   = Additional info on the paper. If config.get('webvalidation') = True, then result['validation_info']
+                                      will typically contain raw bibtex data for this paper. Otherwise it will just contain True 
+        result['path']              = Path of the pdf file
+        result['method']            = Method used to find the identifier
+        result['metadata']          = Dictionary containing bibtex info
+        result['bibtex']            = A string containing a valid bibtex entry
+
     ''' 
 
     # Setup logging
@@ -60,6 +92,7 @@ def pdf2bib(target):
         if not (filename.lower()).endswith('.pdf'):
             logger.error("The file must have .pdf extension.")
             return None
+
         logger.info(f"Trying to extract data to generate the BibTeX entry for the file: {filename}")  
         logger.info(f"Calling pdf2doi...") 
         result = pdf2doi.pdf2doi_singlefile(filename)
@@ -69,37 +102,41 @@ def pdf2bib(target):
             logger.error("The validation_info returned by pdf2doi is not a string. It is not possible to extract BibTeX data.")
         logger.info(f"Trying to parse the data obtained by pdf2doi into valid BibTeX data..") 
         metadata = pdf2bib_singlefile(result)
-        if metadata:
+        if metadata: #if retrieval of bibtex data was succesful, we add the fields to the result dictionary
             result['metadata'] = metadata
             result['bibtex'] = bibtex_makers.make_bibtex(metadata)
-            logger.info(f"A valid BibTeX entry was generated:") 
-            logger.info(result['bibtex'])
-            return result 
+            logger.info(f"A valid BibTeX entry was generated.") 
+            #logger.info(result['bibtex'])
         else:
             logger.error("Some error occurred when parsing the raw BibTeX data.")
+        return result 
 
 def pdf2bib_singlefile(result):
     '''
+    It takes as input a dictionary returned by pdf2doi with identifier and validation info of a single file. It uses the value of 
+    result['validation_info'] to extract bibtex data
+
     Parameters
     ----------
     result : dictionary
         dictionary obtained via pdf2doi
+
     Returns
     -------
+    metadata : dictionary
+        dictionary containing bibtex data
     ''' 
-    
     if result['identifier_type'] == 'DOI':
         metadata = bibtex_makers.parse_bib_from_dxdoiorg(result['validation_info'], method=pdf2doi.config.get('method_dxdoiorg'))
     if result['identifier_type'] == 'arxiv ID':
         metadata = bibtex_makers.parse_bib_from_exportarxivorg(result['validation_info'])
-    
     return metadata
-
 
 
 def save_bibtex_entries(filename_bibtex, results, clipboard = False):
     ''' Write all bibtex entries contained in the input list 'results' into a text file with a path specified by filename_bibtex 
         (if filename_bibtex is a valid string) and/or into the clipboard (if clipboard = True).
+        the input variable results is a list of dictionaries, and the element results[i]['bibtex'] contains the bibtex entry.
     
     Parameters
     ----------
@@ -143,6 +180,12 @@ def save_bibtex_entries(filename_bibtex, results, clipboard = False):
 
     
 def main():
+    '''
+    This is the main function which is called when pdf2dbib is called from the command line. It parses all the input parameters and then 
+    (1) Calls the function pdf2bib, obtaining a list of dictionaries as output
+    (2) Prints a summary of papers analyzed (if verbose is set to True), and then a list of the bibtex entries generated
+    (3) Calls the function save_bibtex_entries to (optionally) save the bibtex entries on file and/or copy them into the clipboard
+    '''
     parser = argparse.ArgumentParser( 
             description = "Generate BibTeX entries of scientific publications starting from the pdf files. It requires an internet connection.",
             epilog = "")
@@ -151,16 +194,16 @@ def main():
                         help = "Relative path of the target pdf file or of the targe folder.",
                         metavar = "path",
                         nargs = '*')
-    parser.add_argument("-nv",
-                        "--no_verbose",
-                        help="Decrease verbosity.",
+    parser.add_argument("-v",
+                        "--verbose",
+                        help="Increase verbosity. By default (i.e. when not using -v), only the text of the found bibtex entries will be printed as output.",
                         action="store_true")
     parser.add_argument("-s",
                         "--make_bibtex_file",
                         dest="filename_bibtex",
                         help="Create a text file inside the target directory, with name given by FILENAME_BIBTEX, containing the bibtex entry of each pdf file in the target folder (if any is found).",
                         action="store")
-    parser.add_argument("-bclip",
+    parser.add_argument("-clip",
                         "--save_bibtex_clipboard",
                         action="store_true",
                         help="Store all found bibtex entries into the clipboard.")
@@ -176,9 +219,10 @@ def main():
     args = parser.parse_args()
 
     # Setup logging
-    if not(args.no_verbose): loglevel = logging.INFO
+    if args.verbose: loglevel = logging.INFO
     else: loglevel = logging.CRITICAL
-
+    config.set('verbose',args.verbose) #store the desired verbose level in the global config of pdf2bib
+    pdf2doi.config.set('verbose',args.verbose) #store the desired verbose level in the global config of pdf2doi
     logger = logging.getLogger("pdf2bib")
     logger.setLevel(level=loglevel)
 
@@ -191,6 +235,9 @@ def main():
         import pdf2bib.utils_registry as utils_registry
         utils_registry.uninstall_right_click()
         return
+
+    ## The following block of code (until ##END) is required to make sure that 'path' is a required parameter, except for the case when
+    ## -install--right--click or -uninstall--right--click are used
     if isinstance(args.path,list):
         if len(args.path)>0:
             target = args.path[0]
@@ -202,21 +249,24 @@ def main():
     if target == "":
         print("pdf2bib: error: the following arguments are required: path. Type \'pdf2bib --h\' for a list of commands.")
         return
+    ## END
 
-    config.set('verbose',not(args.no_verbose))
- 
     results = pdf2bib(target=target)
 
     if not results:
         return
     if not isinstance(results,list):
         results = [results]
-    print('The following files were analyzed:')
+    logger.info('The following files were analyzed:')
     for result in results:
         if result['identifier']:
-            print('{:<15s} {:<40s} {:<10s}\n'.format(result['identifier_type'], result['identifier'],result['path']) ) 
+            logger.info('{:<15s} {:<40s} {:<10s}\n'.format(result['identifier_type'], result['identifier'],result['path']) ) 
         else:
-            print('{:<15s} {:<40s} {:<10s}\n'.format('n.a.', 'n.a.',result['path']) ) 
+            logger.info('{:<15s} {:<40s} {:<10s}\n'.format('n.a.', 'n.a.',result['path']) ) 
+
+    for result in results:
+        if result['identifier']:
+            print(result['bibtex']) 
 
     # We call the function save_bibtex_entries. If args.filename_bibtex is a valid string, it will save all found identifiers in a text file with that name.
     # If args.save_doi_clipboard is true, it will copy all identifiers into the clipboard
