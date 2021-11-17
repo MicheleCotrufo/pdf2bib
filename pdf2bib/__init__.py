@@ -13,7 +13,10 @@ logger.propagate = False
 from .config import config
 config.ReadParamsINIfile()
 
-from .main import pdf2bib
+config.set('verbose',config.get('verbose')) #This is a quick and dirty way (to improve in the future) to make sure that the verbosity of the pdf2doi logger is properly set according
+                                            #to the current value of config.get('verbose') (see config.py file for details)
+
+from .main import pdf2bib, pdf2bib_singlefile
 from .bibtex_makers import *
 #from .utils_registry import install_right_click, uninstall_right_click
 

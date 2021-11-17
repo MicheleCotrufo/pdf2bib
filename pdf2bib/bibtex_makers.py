@@ -87,7 +87,8 @@ def parse_bib_from_exportarxivorg(items):
     data_dict = dict(zip(data_to_extract,data))
 
     #add additionaly values
-    data_dict['eprint'] ="arXiv:" + arxivID 
+    if isinstance(data_dict['arxiv_doi'],str):
+        data_dict['eprint'] ="arXiv:" + data_dict['arxiv_doi']
     data_dict['ejournal'] ="arXiv" 
     data_dict['ENTRYTYPE'] = 'article'
     #rename some of the keys in order to match the bibtex standards
@@ -146,13 +147,19 @@ def make_bibtex(data):
     #After this line, authors must be a string
     
     #Generate the ID by looking for last name of first author, year of publicaton, and first word of title
-    if authors:
-        firstauthor = authors.split(' and ')[0]
-        lastname_firstauthor = (firstauthor.strip()).split(' ')[-1]
-    else: 
-        lastname_firstauthor = ''
+    try:
+        if authors:
+            firstauthor = authors.split(' and ')[0]
+            lastname_firstauthor = (firstauthor.strip()).split(' ')[-1]
+        else: 
+            lastname_firstauthor = ''
+    except:
+        lastname_firstauthor =' '
     year = data['year'] if 'year' in data.keys() else ''
-    first_word_title =  data['title'].split(' ')[0] if 'title' in data.keys() else ''
+    try:
+        first_word_title =  data['title'].split(' ')[0] if 'title' in data.keys()  else ''
+    except:
+        first_word_title =''
     id = lastname_firstauthor + str(year) + first_word_title
     id = id.lower()
     id = remove_latex_codes(id)

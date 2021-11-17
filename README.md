@@ -4,10 +4,10 @@ pdf2bib is a Python library to automatically extract bibliographic information f
 (or from a folder containing several .pdf files), and generate BibTeX entries. The pdf file can be either a paper published in a scientific journal (i.e. with
 a DOI associated to it), or an arxiv preprint.
 It uses the library [pdf2doi](https://github.com/MicheleCotrufo/pdf2doi) to first find a valid identifier of the publication (i.e. either a DOI or an arxiv ID),
-and then use this identifier to query public archives (e.g. http://dx.doi.org) to obtain bibliographic data.
+and then uses this identifier to query public archives (e.g. http://dx.doi.org) to obtain bibliographic data.
 
 pdf2bib can be used either from [command line](#command-line-usage), or inside your [python script](#usage-inside-a-python-script) or, only for Windows, directly from the [right-click context menu](#installing-the-shortcuts-in-the-right-click-context-menu-of-windows) of a pdf file or a folder.
-<!---
+<!--
 <img src="docs/ContextMenu_pdf.gif" width="500" />
 
 [![Downloads](https://pepy.tech/badge/pdf2doi)](https://pepy.tech/project/pdf2doi?versions=0.4&versions=0.5&versions=0.6)[![Downloads](https://pepy.tech/badge/pdf2doi/month)](https://pepy.tech/project/pdf2doi?versions=0.4&versions=0.5&versions=0.6)
@@ -17,7 +17,7 @@ pdf2bib can be used either from [command line](#command-line-usage), or inside y
  - [Description](#description)
  - [Installation](#installation)
  - [Usage](#usage)
- <!---
+ <!--
     * [Command line usage](#command-line-usage)
         + [Generate list of bibtex entries from command line](#generate-list-of-bibtex-entries-from-command-line)
         + [Manually associate the correct identifier to a file from command line](#manually-associate-the-correct-identifier-to-a-file-from-command-line)
@@ -71,12 +71,12 @@ for other bibliographic purposes.
 Currently, only the format of arXiv identifiers in use after [1 April 2007](https://arxiv.org/help/arxiv_identifier) is supported.
 -->
 ## Installation
-<!---[![Pip Package](https://img.shields.io/pypi/v/pdf2doi?logo=PyPI)](https://pypi.org/project/pdf2doi)-->
+<!--[![Pip Package](https://img.shields.io/pypi/v/pdf2doi?logo=PyPI)](https://pypi.org/project/pdf2doi)-->
 
 Use the package manager pip to install pdf2bib.
 
 ```bash
-pip install pdf2bib
+pip install pdf2bib==1.0rc2
 ```
 
 Under Windows, it is also possible to add [shortcuts to the right-click context menu](#installing-the-shortcuts-in-the-right-click-context-menu-of-windows).

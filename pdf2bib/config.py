@@ -38,6 +38,8 @@ class config():
             else: loglevel = logging.CRITICAL
             logger = logging.getLogger("pdf2bib")
             logger.setLevel(level=loglevel)
+            logger = logging.getLogger("pdf2doi")
+            logger.setLevel(level=loglevel)
 
     @staticmethod
     def ReadParamsINIfile():
@@ -54,7 +56,17 @@ class config():
             config_object.optionxform = str
             config_object.read(path_config_file)
             config.__params.update(dict(config_object['DEFAULT']))
+            config.ConvertParamsToBool()
             config.ConvertParamsToNumb()
+
+    @staticmethod
+    def ConvertParamsToBool():
+        for key,val in config.__params.items():
+            if isinstance(val, str):
+                if val.lower() == 'true':
+                    config.__params[key]=True
+                if val.lower() == 'false':
+                    config.__params[key]=False
 
     @staticmethod
     def ConvertParamsToNumb():
@@ -67,19 +79,17 @@ class config():
         Prints all settings
         '''
         for key,val in config.__params.items():
-            print(key + " : " + str(val))
+            print(key + " : " + str(val) + ' ('+type(val).__name__+')')
 
     @staticmethod
     def WriteParamsINIfile():
         '''
         Writes the parameters currently stored in in the dict self.params into the file settings.ini
         '''
-        #params_dict = {key: str(value) for key, value in (config.__params).items()} #Make sure that each value of the dict is converted to a string
         path_current_directory = os.path.dirname(__file__)
         path_config_file = os.path.join(path_current_directory, 'settings.ini')
         config_object = configparser.ConfigParser()
         config_object.optionxform = str
-        #print(config_object)
         config_object['DEFAULT'] = config.__params
         with open(path_config_file, 'w') as configfile: #Write them on file
             config_object.write(configfile)

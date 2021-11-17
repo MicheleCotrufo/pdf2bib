@@ -43,11 +43,7 @@ def pdf2bib(target):
     ''' 
 
     # Setup logging
-    if config.get('verbose'): loglevel = logging.INFO
-    else: loglevel = logging.CRITICAL
-
     logger = logging.getLogger("pdf2bib")
-    logger.setLevel(level=loglevel)
 
     #Check if path is valid
     if not(path.exists(target)):
@@ -93,44 +89,68 @@ def pdf2bib(target):
             logger.error("The file must have .pdf extension.")
             return None
 
-        logger.info(f"Trying to extract data to generate the BibTeX entry for the file: {filename}")  
-        logger.info(f"Calling pdf2doi...") 
-        result = pdf2doi.pdf2doi_singlefile(filename)
-        if result['identifier'] == None:
-            logger.error("It was not possible to find a valid identifier for this file.")
-        if not isinstance(result['validation_info'],str):
-            logger.error("The validation_info returned by pdf2doi is not a string. It is not possible to extract BibTeX data.")
-        logger.info(f"Trying to parse the data obtained by pdf2doi into valid BibTeX data..") 
-        metadata = pdf2bib_singlefile(result)
-        if metadata: #if retrieval of bibtex data was succesful, we add the fields to the result dictionary
-            result['metadata'] = metadata
-            result['bibtex'] = bibtex_makers.make_bibtex(metadata)
-            logger.info(f"A valid BibTeX entry was generated.") 
-            #logger.info(result['bibtex'])
-        else:
-            logger.error("Some error occurred when parsing the raw BibTeX data.")
+        result = pdf2bib_singlefile(filename)
+
         return result 
 
-def pdf2bib_singlefile(result):
+def pdf2bib_singlefile(filename):
     '''
-    It takes as input a dictionary returned by pdf2doi with identifier and validation info of a single file. It uses the value of 
-    result['validation_info'] to extract bibtex data
+    Extract bibtex data from the pdf file specified by filename
 
     Parameters
     ----------
-    result : dictionary
-        dictionary obtained via pdf2doi
+    filename : string
+        absolute path of a single .pdf file
 
     Returns
     -------
-    metadata : dictionary
-        dictionary containing bibtex data
+    result : dictionary
+        The output is a single dictionary describing the data obtained for this file.
+        The dictionary has the following keys
+        result['identifier']        = DOI or other identifier (or None if nothing is found)
+        result['identifier_type']   = String specifying the type of identifier (e.g. 'doi' or 'arxiv')
+        result['validation_info']   = Additional info on the paper. If config.get('webvalidation') = True, then result['validation_info']
+                                      will typically contain raw bibtex data for this paper. Otherwise it will just contain True 
+        result['path']              = Path of the pdf file
+        result['method']            = Method used to find the identifier
+        result['metadata']          = Dictionary containing bibtex info
+        result['bibtex']            = A string containing a valid bibtex entry
     ''' 
+    # Setup logging
+    logger = logging.getLogger("pdf2bib")
+    logger.info(f"Trying to extract data to generate the BibTeX entry for the file: {filename}")  
+    logger.info(f"Calling pdf2doi...") 
+    result = pdf2doi.pdf2doi_singlefile(filename)
+    if result['identifier'] == None:
+        logger.error("It was not possible to find a valid identifier for this file.")
+        result['metadata'] = None
+        result['bibtex'] = None
+        return result
+    if not (isinstance(result['validation_info'],str) or isinstance(result['validation_info'],dict)):
+        result['metadata'] = None
+        result['bibtex'] = None
+        logger.error("The validation_info returned by pdf2doi is not a string or valid dictionary. It is not possible to extract BibTeX data.")
+        return result
+
+    logger.info(f"pdf2doi found a valid identifier for this paper. Trying to parse the data obtained by pdf2doi into valid BibTeX data..") 
+  
     if result['identifier_type'] == 'DOI':
         metadata = bibtex_makers.parse_bib_from_dxdoiorg(result['validation_info'], method=pdf2doi.config.get('method_dxdoiorg'))
     if result['identifier_type'] == 'arxiv ID':
         metadata = bibtex_makers.parse_bib_from_exportarxivorg(result['validation_info'])
-    return metadata
+
+    if metadata: #if retrieval of bibtex data was succesful, we add the fields to the result dictionary
+        result['metadata'] = metadata
+        result['bibtex'] = bibtex_makers.make_bibtex(metadata)
+        logger.info(f"A valid BibTeX entry was generated.") 
+        #logger.info(result['bibtex'])
+    else:
+        result['metadata'] = None
+        result['bibtex'] = None
+        logger.error("Some error occurred when parsing the raw BibTeX data.")
+    
+    return result
+    
 
 
 def save_bibtex_entries(filename_bibtex, results, clipboard = False):
@@ -219,12 +239,9 @@ def main():
     args = parser.parse_args()
 
     # Setup logging
-    if args.verbose: loglevel = logging.INFO
-    else: loglevel = logging.CRITICAL
-    config.set('verbose',args.verbose) #store the desired verbose level in the global config of pdf2bib
-    pdf2doi.config.set('verbose',args.verbose) #store the desired verbose level in the global config of pdf2doi
+    config.set('verbose',args.verbose) #store the desired verbose level in the global config of pdf2bib. This will also automatically update the logger level.
+    pdf2doi.config.set('verbose',args.verbose) #store the desired verbose level in the global config of pdf2doi. This will also automatically update the logger level.
     logger = logging.getLogger("pdf2bib")
-    logger.setLevel(level=loglevel)
 
     #If the command -install--right--click was specified, it sets the right keys in the system registry
     if args.install_right_click:
