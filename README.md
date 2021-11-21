@@ -256,17 +256,8 @@ result['method']            = method used by pdf2doi to find the identifier
 result['validation_info']   = Raw BibTeX data.
 result['metadata']          = Dictionary containing bibtex info
 result['bibtex']            = A string containing a valid bibtex entry
+```
 
-```
-For example, the DOIs/identifiers of each file can be printed by
-```
->>> for result in results:
->>>     print(result['identifier'])
-10.1016/0021-9991(86)90093-8
-10.1063/1.2409490
-10.1103/PhysRevLett.116.061102
-10.1038/s41586-019-1666-5
-```
 
 #### Manually associate the correct identifier to a file
 Similarly to what described [above](#manually-associate-the-correct-identifier-to-a-file-from-command-line), it is possible to associate a (manually found) 
