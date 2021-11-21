@@ -64,7 +64,7 @@ def install_right_click():
         reg.SetValue(key, '', reg.REG_SZ, 'Retrieve and copy bibtex entries of all pdf files in this folder...')
         reg.CloseKey(key)
         key = reg.CreateKey(reg.HKEY_CLASSES_ROOT, 'Directory\shell\pdf2bib\shell\pdf2bib_copybibtex\command')
-        reg.SetValue(key, '', reg.REG_SZ, path_pdf2bib + " \"%1\" -bclip")
+        reg.SetValue(key, '', reg.REG_SZ, path_pdf2bib + " \"%1\" -clip")
         reg.CloseKey(key)
 
 
@@ -79,7 +79,7 @@ def install_right_click():
         reg.SetValue(key, '', reg.REG_SZ, 'Retrieve and copy bibtex entry of this file...')
         reg.CloseKey(key)
         key = reg.CreateKey(reg.HKEY_CLASSES_ROOT, 'SystemFileAssociations\.pdf\shell\pdf2bib\shell\pdf2bib_copybibtex\command')
-        reg.SetValue(key, '', reg.REG_SZ, path_pdf2bib + " \"%1\" -bclip")
+        reg.SetValue(key, '', reg.REG_SZ, path_pdf2bib + " \"%1\" -clip")
         reg.CloseKey(key)
 
 
