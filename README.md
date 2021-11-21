@@ -302,7 +302,7 @@ I am thankful to my friend and colleague Yarden Mazor for leading the beta-testi
 ## Donating
 If you find this library useful (or amazing!), please consider making donations on my behalf to organizations that advocate for and promote free dissemination of science, such as
 
-arXiv](https://arxiv.org/about/donate)
+[arXiv](https://arxiv.org/about/donate)
 
 [Sci-Hub](https://sci-hub.se/donate)
 
