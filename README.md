@@ -280,27 +280,26 @@ identifier to a pdf file also from within python, by using the function ```pdf2d
 This functionality is only available on Windows (and so far it has been tested only on Windows 10). It adds additional commands to the context menu of Windows
 which appears when right-clicking on a pdf file or on a folder.
 
-<img src="docs/ContextMenu_pdf.png" width="550" /><img src="docs/ContextMenu_folder.png" width="550" />
+<!--<img src="docs/ContextMenu_pdf.png" width="550" /><img src="docs/ContextMenu_folder.png" width="550" />-->
 
-The different menu commands allow to copy the paper(s) identifier(s) or bibtex entry(ies) into the system clipboard, or also to manually
-set the identifier of a pdf file (see also [here](#manually-associate-the-correct-identifier-to-a-file-from-command-line)).
+The  menu commands allow to copy BibTeX entry of a pdf file (or all pdf files contained in a folder) into the system clipboard.
 
-<img src="docs/ContextMenu_pdf.gif" width="500" />
+<!--<img src="docs/ContextMenu_pdf.gif" width="500" />-->
 
-To install this functionality, first install ```pdf2doi``` via pip (as described above), then open a command prompt **with administrator rights** and execute
+To install this functionality, first install ```pdf2bib``` via pip (as described above), then open a command prompt **with administrator rights** and run
 ```
-$ pdf2doi  -install--right--click
+$ pdf2bib  -install--right--click
 ```
 To remove it, simply run (again from a terminal with administrator rights)
 ```
-$ pdf2doi  -uninstall--right--click
+$ pdf2bib  -uninstall--right--click
 ```
 If it is not possible to run this command from a terminal with administrator rights, the batch files
 [here](/right_click_menu_installation) can be alternatively used (see readme.MD file in the same folder for instructions), although it is still required to have 
 admnistrator rights.
 
-NOTE: when multiple pdf files are selected, and the right-click context menu commands are used, ```pdf2doi``` will be called separately for each file, and thus
-only the info of the last file will be stored in the clipboard. In order to copy the info of multiple files it is necessary to save them in a folder and right-click on the folder.
+NOTE: when multiple pdf files are selected, and the right-click context menu commands are used, ```pdf2bib``` will be called separately for each file, and thus
+only the BibTeX entry of the last file will be stored in the clipboard. In order to copy the info of multiple files it is necessary to save them in a folder and right-click on the folder.
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
