@@ -30,6 +30,7 @@ Under Windows, it is also possible to add [shortcuts to the right-click context 
     * [Command line usage](#command-line-usage)
         + [Manually associate the correct identifier to a file from command line](#manually-associate-the-correct-identifier-to-a-file-from-command-line)
     * [Usage inside a python script](#usage-inside-a-python-script)
+        + [Manually associate the correct identifier to a file](#manually-associate-the-correct-identifier-to-a-file)
  - [Installing the shortcuts in the right-click context menu of Windows](#installing-the-shortcuts-in-the-right-click-context-menu-of-windows)
   -[Contributing](#contributing)
  - [License](#license)
