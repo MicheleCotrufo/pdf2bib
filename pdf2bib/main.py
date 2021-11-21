@@ -3,8 +3,9 @@ import logging
 from os import path, listdir
 import pdf2bib.bibtex_makers as bibtex_makers
 import pdf2bib.config as config
-import pdf2doi
+import pdf2doi as pdf2doi
 #import pyperclip (Modules that are commented here are imported later only when needed, to improve start up time)
+
 
 def pdf2bib(target):
     ''' 
@@ -112,7 +113,7 @@ def pdf2bib_singlefile(filename):
         result['validation_info']   = Additional info on the paper. If config.get('webvalidation') = True, then result['validation_info']
                                       will typically contain raw bibtex data for this paper. Otherwise it will just contain True 
         result['path']              = Path of the pdf file
-        result['method']            = Method used to find the identifier
+        result['method']            = Method used by pdf2doi to find the identifier
         result['metadata']          = Dictionary containing bibtex info
         result['bibtex']            = A string containing a valid bibtex entry
     ''' 
@@ -185,18 +186,18 @@ def save_bibtex_entries(filename_bibtex, results, clipboard = False):
         try:
             with open(path_filename_bibtex, "w", encoding="utf-8") as text_file:
                 text_file.write(text) 
-                logger.info(f'All available bibtex entries have been stored in the file {filename_bibtex}')
+                print(f'All available bibtex entries have been stored in the file {filename_bibtex}')
         except Exception as e:
-            logger.error(e)
-            logger.error(f'A problem occurred when trying to write into the file {filename_bibtex}')
+            print(e)
+            print(f'A problem occurred when trying to write into the file {filename_bibtex}')
     if clipboard:
         import pyperclip
         try:
             pyperclip.copy(text)
-            logger.info(f'All available bibtex entries have been stored in the system clipboard')
+            print(f'All available bibtex entries have been stored in the system clipboard')
         except Exception as e:
-            logger.error(e)
-            logger.error(f'A problem occurred when trying to write into the system clipboard')
+            print(e)
+            print(f'A problem occurred when trying to write into the system clipboard')
 
     
 def main():
@@ -230,7 +231,9 @@ def main():
     parser.add_argument("-install--right--click",
                         dest="install_right_click",
                         action="store_true",
-                        help="Add a shortcut to pdf2bib in the right-click context menu of Windows. You can copy the bibtex entry of a pdf file (or all pdf files in a folder) into the clipboard by just right clicking on it! NOTE: this feature is only available on Windows.")
+                        help="Add a shortcut to pdf2bib in the right-click context menu of Windows. This allows you to copy the bibtex\
+                                entry of a pdf file (or all pdf files in a folder) into the clipboard by just right clicking\
+                                on it! NOTE: this feature is only available on Windows.")
     parser.add_argument("-uninstall--right--click",
                         dest="uninstall_right_click",
                         action="store_true",
@@ -239,16 +242,17 @@ def main():
     args = parser.parse_args()
 
     # Setup logging
-    config.set('verbose',args.verbose) #store the desired verbose level in the global config of pdf2bib. This will also automatically update the logger level.
-    pdf2doi.config.set('verbose',args.verbose) #store the desired verbose level in the global config of pdf2doi. This will also automatically update the logger level.
+    config.set('verbose',args.verbose) #store the desired verbose level in the global config of pdf2bib. This will also automatically update the pdf2bib and pdf2doi logger level.
     logger = logging.getLogger("pdf2bib")
 
     #If the command -install--right--click was specified, it sets the right keys in the system registry
     if args.install_right_click:
+        config.set('verbose',True)
         import pdf2bib.utils_registry as utils_registry
         utils_registry.install_right_click()
         return
     if args.uninstall_right_click:
+        config.set('verbose',True)
         import pdf2bib.utils_registry as utils_registry
         utils_registry.uninstall_right_click()
         return
@@ -274,16 +278,16 @@ def main():
         return
     if not isinstance(results,list):
         results = [results]
-    logger.info('The following files were analyzed:')
-    for result in results:
-        if result['identifier']:
-            logger.info('{:<15s} {:<40s} {:<10s}\n'.format(result['identifier_type'], result['identifier'],result['path']) ) 
-        else:
-            logger.info('{:<15s} {:<40s} {:<10s}\n'.format('n.a.', 'n.a.',result['path']) ) 
-
-    for result in results:
-        if result['identifier']:
-            print(result['bibtex']) 
+    #logger.info('The following files were analyzed:')
+    #for result in results:
+    #    if result['identifier']:
+    #        logger.info('{:<15s} {:<40s} {:<10s}\n'.format(result['identifier_type'], result['identifier'],result['path']) ) 
+    #    else:
+    #        logger.info('{:<15s} {:<40s} {:<10s}\n'.format('n.a.', 'n.a.',result['path']) ) 
+    if not(args.filename_bibtex or args.save_bibtex_clipboard): #If the user wants to save the bibtex entries on file or on the clipboard, we dont show them in the command prompt
+        for result in results:
+            if result['identifier']:
+                print(result['bibtex']) 
 
     # We call the function save_bibtex_entries. If args.filename_bibtex is a valid string, it will save all found identifiers in a text file with that name.
     # If args.save_doi_clipboard is true, it will copy all identifiers into the clipboard
