@@ -6,7 +6,6 @@ import logging
 import urllib.parse
 from unidecode import unidecode
 import bibtexparser
-import pdf2doi.config as config
 
 logger = logging.getLogger('pdf2bib')
 
