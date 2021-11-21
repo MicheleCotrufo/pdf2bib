@@ -1,8 +1,8 @@
 # pdf2bib
 
-```pdf2bib``` is a Python library to automatically extract bibliographic information from the .pdf file of a publication 
-(or from a folder containing several .pdf files), and easily generate BibTeX entries. The pdf file can be either a paper published in a scientific journal (i.e. with
-a DOI associated to it), or an arxiv preprint.
+```pdf2bib``` is a Python library/command-line tool to extract bibliographic information from the .pdf file of a publication 
+(or from a folder containing several .pdf files), and automatically generate BibTeX entries. The pdf file can be either a paper published in a scientific journal (i.e. with
+a DOI associated to it), or an [arXiv](https://arxiv.org/about/donate) preprint.
 
 ```pdf2bib``` can be used either from [command line](#command-line-usage), or inside your [python script](#usage-inside-a-python-script) or, only for Windows, directly from the [right-click context menu](#installing-the-shortcuts-in-the-right-click-context-menu-of-windows) of a pdf file or a folder.
 
@@ -310,7 +310,7 @@ I am thankful to my friend and colleague Yarden Mazor for leading the beta-testi
 ## Donating
 If you find this library useful (or amazing!), please consider making donations on my behalf to organizations that advocate for and promote free dissemination of science, such as
 
-[Arxiv](https://arxiv.org/about/donate)
+arXiv](https://arxiv.org/about/donate)
 
 [Sci-Hub](https://sci-hub.se/donate)
 
