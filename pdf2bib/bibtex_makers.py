@@ -22,15 +22,19 @@ logger = logging.getLogger('pdf2bib')
 
 def parse_bib_from_dxdoiorg(text, method):
     """
-    Given a certain string contained in the input variable text, which was obtained from pdf2doi by quering dx.doi.org, it parses the string text and return a dictionary containing valid bibtex infos.
-    The input variable method is a string which specify the method used by pdf2doi to query dx.doi.org, and it is normally defined in pdf2doi.get('method_dxdoiorg')
+    Given a certain string contained in the input variable text, which was obtained from pdf2doi by quering dx.doi.org, it parses the string and returns a dictionary containing valid bibtex infos.
+    The input variable method is a string which specifies the method used by pdf2doi to query dx.doi.org, and it is normally defined in pdf2doi.get('method_dxdoiorg')
+
+    Note: the methods "application/x-bibtex" and "text/bibliography; style=bibtex" return strings in the same format
+    Note: "text/bibliography; style=bibtex" returns the authors in the format "LastName1, FirstName1 SecondName1.. and LastName2, FirstName2 SecondName2.. and etc."
+    Note: the method 'application/citeproc+json' returns data in JSON format
+
+    Whne the method "application/citeproc+json" is used (which will be the standard method) the dictionary returned by this functions contains ALWAYS ONLY the following keys
+    'title', 'author', 'journal', 'volume', 'issue', 'page', 'publisher', 'url', 'doi', 'year', 'month'
+    all values are strings, except for the value corresponding to the 'author' key, which is instead a list of dictionaries (one dictionary per each author).
+    Normally, the format returned by dx.doi.org when using "application/citeproc+json" is author =  [{'given': 'Name1', 'family': 'LastName1'}, {'given': 'Name2', 'family': 'LastName2'}, ... [{'given': 'NameN', 'family': 'LastNameN'}]
     """
 
-    #Note: the methods "application/x-bibtex" and "text/bibliography; style=bibtex" return strings in the same format
-    #However, as of 2021 Nov 6, the method "application/x-bibtex" does not return the paper journal (probably due to a bug in dx.doi.org
-    #Note: "text/bibliography; style=bibtex" returns the authors in the format "LastName1, FirstName1 SecondName1.. and LastName2, FirstName2 SecondName2.. and etc."
-    #which is not the format expect by the script pdf-renamer
-    #Note: the method 'application/citeproc+json' returns data in JSON format
     # 
     if method == "application/x-bibtex":
         data = bibtexparser.loads(text)
@@ -66,7 +70,7 @@ def parse_bib_from_dxdoiorg(text, method):
         except:
             metadata['month'] = ''
         try:
-            metadata['author'] = [author['given'] + ' ' + author['family'] for author in json_dict['author']]
+            metadata['author'] = [author for author in json_dict['author']]
         except:
             metadata['author'] = ''
         return metadata
@@ -75,11 +79,17 @@ def parse_bib_from_dxdoiorg(text, method):
 
 def parse_bib_from_exportarxivorg(items):
     """
-    Given a certain dictionary contained in the input variable items, which was obtained from pdf2doi by quering export.arxiv.org,
+    Given a certain dictionary contained in the input variable items (which was obtained from pdf2doi by quering export.arxiv.org)
     it returns a dictionary containing valid bibtex infos
+
+    the dictionary returned by this functions contains ALWAYS ONLY the following keys
+    'title', 'author', 'ejournal', 'eprint', 'published', 'url', 'doi','arxiv_doi', 'year', 'month', 'day', 'ENTRYTYPE'
+
+    all values are strings, except for the value corresponding to the 'author' key, which is either a string in the format "Name1 Lastname1 and Name2 Lastname2 and ... "
+    #or a list of dictionaries in the format  [{'given': 'Name1', 'family': 'LastName1'}, {'given': 'Name2', 'family': 'LastName2'}, ... [{'given': 'NameN', 'family': 'LastNameN'}]
     """
     #Extract data from the dictionary items
-    data_to_extract = ['title','authors','author','link','published','arxiv_doi']
+    data_to_extract = ['title','link','published','arxiv_doi']
     data =[items[key] if key in items.keys() else None for key in data_to_extract]
 
     #Create the dictionary data_dict which will be passed to the function make_bibtex
@@ -107,18 +117,21 @@ def parse_bib_from_exportarxivorg(items):
     data_dict['month'] = month
     data_dict['day'] = day
 
-    if 'authors' in data_dict:
-        authors = data_dict['authors']
-    elif 'author' in data_dict:
-        authors = data_dict['author']
+    if 'authors' in items:
+        authors = items['authors'] #The entry 'authors' should always be a list of dictionaries, with one dictionary for each author
+    elif 'author' in items:
+        authors = items['author'] #The entry 'author' is normally a string containing only one author (normally the corresponding author)
     else:
         authors = ''
-        
-    #if authors are defined as list, create a string out of it, with the format 
-    #"Name1 Lastname1 and Name2 Lastname2 and ... "
+
+    #The typical format returned by export.arxiv.org for the authors is a list 
+    #in the format [{'name': 'Name1 LastName1'}, {'name': 'Name2 LastName2'}, ... [{'name': 'NameN LastNameN'}], 
+    #If authors is indeed a list in this format, we reshape it in the format [{'given': 'Name1', 'family': 'LastName1'}, {'given': 'Name2', 'family': 'LastName2'}, ... [{'given': 'NameN', 'family': 'LastNameN'}]
     if authors and isinstance(authors,list):
-        authorsnames_list = [author['name'] for author in authors]
-        data_dict['authors'] = " and ".join(authorsnames_list)
+        authorsnames_list = [ {'given' : " ".join(author['name'].split(" ")[0:-1]), 'family': author['name'].split(" ")[-1]} for author in authors]
+        data_dict['author'] = authorsnames_list
+    elif authors and isinstance(authors,str):
+        data_dict['author'] = authors
 
     return data_dict
 
@@ -128,32 +141,27 @@ def make_bibtex(data):
     #The ID of the bibtex entry has the format [lastname_firstauthor][year][first_word_title] all in lower case
     #If the tag url is present, any possible ascii code (e.g. %2f) is decoded
     #Note: the code below assumes that the field for the authors is either a string in the format "Name1 Lastname1 and Name2 Lastname2 and ... "
-    #or a list in the format ['Name1 Lastname1','Name2 Lastname2',...]
+    #or a list of dictionaries in the format  [{'given': 'Name1', 'family': 'LastName1'}, {'given': 'Name2', 'family': 'LastName2'}, ... [{'given': 'NameN', 'family': 'LastNameN'}]
 
-    
-    if 'authors' in data.keys():
-        authors = data['authors']
-    elif 'author' in data.keys():
+    if 'author' in data.keys():
         authors = data['author']
     else:
         authors = ''
-    if  isinstance(authors,list):
-        authors = " and ".join(authors)
-        data['author'] = authors
-    if not(type(authors) in (str, list)):
-        raise TypeError('The value corresponding to the key ''author'' or ''authors'' must be either a string or a list of strings')
 
-    #After this line, authors must be a string
+    if not(type(authors) in (str, list)):
+        raise TypeError('The value corresponding to the key ''author'' must be either a string or a list of strings')
     
     #Generate the ID by looking for last name of first author, year of publicaton, and first word of title
     try:
-        if authors:
-            firstauthor = authors.split(' and ')[0]
-            lastname_firstauthor = (firstauthor.strip()).split(' ')[-1]
+        if authors and isinstance(authors,list):
+            firstauthor = authors[0]
+            lastname_firstauthor = (firstauthor['family'].strip()).split(' ')[0]
+        elif authors and isinstance(authors,str): 
+            lastname_firstauthor = authors.split(" and ")[0].split(" ")[-1] #We assume that the word before the first occurence of and is the last name of first author
         else: 
             lastname_firstauthor = ''
     except:
-        lastname_firstauthor =' '
+        lastname_firstauthor =''
     year = data['year'] if 'year' in data.keys() else ''
     try:
         first_word_title =  data['title'].split(' ')[0] if 'title' in data.keys()  else ''
@@ -163,6 +171,7 @@ def make_bibtex(data):
     id = id.lower()
     id = remove_latex_codes(id)
     id = unidecode(id) #This makes sure that the id of the bibtex entry is only made out of ascii characters (i.e. no accents, tildes, etc.)
+    id = id.replace('-','') #Make sure to remove any possible hyphen
     if id == '':
         id = 'NoValidID'
 
@@ -173,7 +182,13 @@ def make_bibtex(data):
     if not 'ENTRYTYPE' in data.keys():
         data['ENTRYTYPE'] = 'article'
 
-    #Create the bibtex entryr as a string 
+    if  isinstance(authors,list):
+        authors_string = " and ".join([ a.get('given', '') +  " " + a.get('family', '') for a in authors])
+        data['author'] = authors_string
+    elif isinstance(authors,str):
+        data['author'] = authors
+
+    #Create the bibtex entry as a string 
     metadata_not_to_use = ['ENTRYTYPE','ID'] #These are temporary metadata, not useful for bibtex
     text = ["@"+data['ENTRYTYPE']+"{" + id]
     for key, value in data.items():
