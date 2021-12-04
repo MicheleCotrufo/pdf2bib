@@ -11,8 +11,7 @@ method_dxdoiorg                         It sets which method is used by the libr
 
 class config():
     __params={'verbose'   :   True,
-            'separator' : os.path.sep,
-            'method_dxdoiorg' : 'application/citeproc+json',
+            'separator' : os.path.sep
             }
     __setters = __params.keys()
 
