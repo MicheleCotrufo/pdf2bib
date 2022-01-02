@@ -12,7 +12,7 @@ a DOI associated to it), or an [arXiv](https://arxiv.org/about/donate) preprint.
 Use the package manager pip to install pdf2bib.
 
 ```bash
-pip install pdf2bib==1.0rc3
+pip install pdf2bib==1.0
 ```
 
 Under Windows, it is also possible to add [shortcuts to the right-click context menu](#installing-the-shortcuts-in-the-right-click-context-menu-of-windows).
@@ -28,6 +28,7 @@ Under Windows, it is also possible to add [shortcuts to the right-click context 
  - [Description](#description)
  - [Usage](#usage)
     * [Command line usage](#command-line-usage)
+        + [Creating a bib file from a folder](#creating-a-bib-file-from-a-folder)
         + [Manually associate the correct identifier to a file from command line](#manually-associate-the-correct-identifier-to-a-file-from-command-line)
     * [Usage inside a python script](#usage-inside-a-python-script)
         + [Manually associate the correct identifier to a file](#manually-associate-the-correct-identifier-to-a-file)
@@ -39,10 +40,10 @@ Under Windows, it is also possible to add [shortcuts to the right-click context 
 
 
 ## Description
-```pdf2bib``` relies on the library [pdf2doi](https://github.com/MicheleCotrufo/pdf2doi), which can automatically find a valid identifier of the publication (i.e. either a DOI or an arxiv ID)
-starting from a .pdf file, and then validate it by querying public archives (e.g., http://dx.doi.org for DOIs and http://export.arxiv.org for arxiv IDs). 
-The validation process returns raw BibTeX data (see also [here](https://github.com/MicheleCotrufo/pdf2doi#usage-inside-a-python-script)).
-```pdf2bib``` parses this raw data and generates a valid BibTeX entry, in the format
+```pdf2bib``` relies on the library [pdf2doi](https://github.com/MicheleCotrufo/pdf2doi), which can automatically find a valid identifier of a scientific publication (i.e. either a DOI or an arxiv ID)
+starting from a .pdf file. The identifier is also validated by querying public archives (e.g., http://dx.doi.org for DOIs and http://export.arxiv.org for arxiv IDs). 
+The validation process returns raw BibTeX data (see also [here](https://github.com/MicheleCotrufo/pdf2doi#usage-inside-a-python-script)), which is then used by
+```pdf2bib``` to generate a valid BibTeX entry in the format
 ```
 @article{[LastNameFirstAuthor][PublicationYear][FirstWordTitle],
         title = ...,
@@ -63,7 +64,7 @@ but this functionality will be implemented in future realeses.
 
 ## Usage
 
-pdf2bib can be used either as a [stand-alone application](#command-line-usage) invoked from the command line, or by [importing it in your python project](#usage-inside-a-python-script) or, only for Windows, 
+```pdf2bib``` can be used either as a [stand-alone application](#command-line-usage) invoked from the command line, or by [importing it in your python project](#usage-inside-a-python-script) or, only for Windows, 
 directly from the [right-click context menu](#installing-the-shortcuts-in-the-right-click-context-menu-of-windows) of a pdf file or a folder.
 
 ### Command line usage
@@ -206,6 +207,15 @@ optional arguments:
                         Uninstall the right-click context menu functionalities. NOTE: this feature is only available
                         on Windows.
 ```
+
+#### Creating a bib file from a folder
+```pdf2bib``` can be used to quickly generate a .bib file containining the BibTeX entries of all pdf files in a target folder, via the command
+
+```bash
+pdf2bib 'path\to\target\folder' -s bibtex.bib
+```
+The generated .bib file can be imported into other software, such as [Zotero](https://www.zotero.org/), to generate bibliograpies for, e.g. Microsoft Word.
+
 
 #### Manually associate the correct identifier to a file from command line
 Occasionally, the BibTeX generation process will fail (or give wrong results) if the library ```pdf2doi``` (which ```pdf2bib``` relies on to find a valid publication identifier)
