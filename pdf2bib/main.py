@@ -80,7 +80,7 @@ def pdf2bib(target):
 
         return papers
     
-    #If target is not a directory, we check that it is an existing file and that it ends with .pdf
+    #If target is not a directory, we check that if it is an existing file and that it ends with .pdf
     else:
         filename = target
         if not path.exists(filename):
@@ -96,7 +96,7 @@ def pdf2bib(target):
 
 def pdf2bib_singlefile(filename):
     '''
-    Extract bibtex data from the pdf file specified by filename
+    Extract bibtex data from the pdf file specified by filename. This function does not check wheter filename is a valid path to a pdf file.
 
     Parameters
     ----------
