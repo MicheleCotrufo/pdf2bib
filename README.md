@@ -12,17 +12,17 @@ a DOI associated to it), or an [arXiv](https://arxiv.org/about/donate) preprint.
 Use the package manager pip to install pdf2bib.
 
 ```bash
-pip install pdf2bib==1.0
+pip install pdf2bib
 ```
 
 Under Windows, it is also possible to add [shortcuts to the right-click context menu](#installing-the-shortcuts-in-the-right-click-context-menu-of-windows).
 
-<!--
+
 <img src="docs/ContextMenu_pdf.gif" width="500" />
 
-[![Downloads](https://pepy.tech/badge/pdf2doi)](https://pepy.tech/project/pdf2doi?versions=0.4&versions=0.5&versions=0.6)[![Downloads](https://pepy.tech/badge/pdf2doi/month)](https://pepy.tech/project/pdf2doi?versions=0.4&versions=0.5&versions=0.6)
-[![Pip Package](https://img.shields.io/pypi/v/pdf2doi?logo=PyPI)](https://pypi.org/project/pdf2doi)
--->
+[![Downloads](https://pepy.tech/badge/pdf2bib)](https://pepy.tech/project/pdf2bib?versions=1.0&versions=1.0.1)[![Downloads](https://pepy.tech/badge/pdf2bib/month)](https://pepy.tech/project/pdf2bib?versions=1.0&versions=1.0.1)
+[![Pip Package](https://img.shields.io/pypi/v/pdf2bib?logo=PyPI)](https://pypi.org/project//pdf2bib?versions=1.0&versions=1.0.1)
+
 ## Table of Contents
  - [Installation](#installation)
  - [Description](#description)
@@ -212,9 +212,9 @@ optional arguments:
 ```pdf2bib``` can be used to quickly generate a .bib file containining the BibTeX entries of all pdf files in a target folder, via the command
 
 ```bash
-pdf2bib 'path\to\target\folder' -s bibtex.bib
+pdf2bib 'path\\to\\target\\folder' -s bibtex.bib
 ```
-The generated .bib file can be imported into other software, such as [Zotero](https://www.zotero.org/), to generate bibliograpies for, e.g. Microsoft Word.
+The generated .bib file can be imported into other software, such as [Zotero](https://www.zotero.org), to generate bibliograpies for, e.g. Microsoft Word.
 
 
 #### Manually associate the correct identifier to a file from command line
