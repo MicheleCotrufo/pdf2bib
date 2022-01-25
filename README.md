@@ -265,7 +265,10 @@ result['metadata']          = Dictionary containing bibtex info
 result['bibtex']            = A string containing a valid bibtex entry
 ```
 
-The element ```result['metadata']``` is a dictionary containing the most typical bibtex infos. The specific keys contained in this dictionary, and their format, will depend on several factors, such as (1) if the paper was associated to DOI or to an arxiv ID, (2) which method was used by ```pdf2doi``` to validate the paper identifier, and (3) which data was found for this paper in the relevant archive. When the paper is associate to DOI, the ```result['metadata']``` dictionary will always contain at least the keys  ```'title', 'author', 'journal', 'volume', 'issue', 'page', 'publisher', 'url', 'doi', 'year', 'month'```, althought some of them might be empty. When the paper is associated to an arxiv ID, the ```result['metadata']``` dictionary will always contain the keys ```'title', 'author', 'ejournal', 'eprint', 'published', 'url', 'doi','arxiv_doi', 'year', 'month', 'day', 'ENTRYTYPE'```
+The element ```result['metadata']``` is a dictionary containing the most typical bibtex infos. 
+The specific keys contained in this dictionary, and their format, will depend on several factors, such as (1) if the paper was associated to a DOI or to an arxiv ID, 
+(2) which method was used by ```pdf2doi``` to validate the paper identifier, and (3) which data is available for this paper in the relevant archive. 
+When the paper is associate to a DOI, the ```result['metadata']``` dictionary will always contain at least the keys  ```'title', 'author', 'journal', 'volume', 'issue', 'page', 'publisher', 'url', 'doi', 'year', 'month'```, althought some of them might be empty. When the paper is associated to an arxiv ID, the ```result['metadata']``` dictionary will always contain the keys ```'title', 'author', 'ejournal', 'eprint', 'published', 'url', 'doi','arxiv_doi', 'year', 'month', 'day', 'ENTRYTYPE'```
 
 #### Manually associate the correct identifier to a file
 Similarly to what described [above](#manually-associate-the-correct-identifier-to-a-file-from-command-line), it is possible to associate a (manually found) 
