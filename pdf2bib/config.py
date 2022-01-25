@@ -2,19 +2,11 @@ import configparser
 import os
 import logging
 
-''' 
-method_dxdoiorg                         It sets which method is used by the library pdf2doi when querying dx.doi.org to retrieve the bibtex info
-                                        Two possible values are 'text/bibliography; style=bibtex' , 'application/x-bibtex' and
-                                        'application/citeproc+json'                             
-'''
-
-
 class config():
     __params={'verbose'   :   True,
             'separator' : os.path.sep
             }
     __setters = __params.keys()
-
 
     @staticmethod
     def update_params(new_params):
@@ -92,14 +84,3 @@ class config():
         config_object['DEFAULT'] = config.__params
         with open(path_config_file, 'w') as configfile: #Write them on file
             config_object.write(configfile)
-
-
-###########################################
-
-
-
-
-
-
-
-
