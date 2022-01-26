@@ -17,8 +17,8 @@ pip install pdf2bib
 
 Under Windows, it is also possible to add [shortcuts to the right-click context menu](#installing-the-shortcuts-in-the-right-click-context-menu-of-windows).
 
-[![Downloads](https://pepy.tech/badge/pdf2bib)](https://pepy.tech/project/pdf2bib?versions=1.0&versions=1.0.1)[![Downloads](https://pepy.tech/badge/pdf2bib/month)](https://pepy.tech/project/pdf2bib?versions=1.0&versions=1.0.1)
-[![Pip Package](https://img.shields.io/pypi/v/pdf2bib?logo=PyPI)](https://pypi.org/project/pdf2bib?versions=1.0.1)
+[![Downloads](https://pepy.tech/badge/pdf2bib)](https://pepy.tech/project/pdf2bib?versions=1.0&versions=1.0.1)[![Downloads](https://pepy.tech/badge/pdf2bib/month)](https://pepy.tech/project/pdf2bib?versions=1.0&versions=1.0.1&versions=1.0.2)
+[![Pip Package](https://img.shields.io/pypi/v/pdf2bib?logo=PyPI)](https://pypi.org/project/pdf2bib?versions=1.0.2)
 
 ## Table of Contents
  - [Installation](#installation)
