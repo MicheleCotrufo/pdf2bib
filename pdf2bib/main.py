@@ -271,6 +271,12 @@ def main():
         return
     ## END
 
+    str_savebibtex = f"All bibtex entries found in {target} will be stored in the file {args.filename_bibtex }\n." if args.filename_bibtex else ''
+    str_copybibtex = f"All bibtex entries found in will be copied into the system clipboard\n." if  args.save_bibtex_clipboard else ''
+    if str_savebibtex or str_copybibtex:
+        print(f"{str_savebibtex} {str_copybibtex}")
+    if(args.verbose==False):
+        print(f"(All intermediate output will be suppressed. To see additional outuput, use the command -v)")
     results = pdf2bib(target=target)
 
     if not results:
