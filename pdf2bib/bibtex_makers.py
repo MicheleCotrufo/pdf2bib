@@ -181,9 +181,12 @@ def make_bibtex(metadata):
         data['ENTRYTYPE'] = 'article'
 
     if  isinstance(authors,list):
-        authors_string = " and ".join([ a.get('given', '') +  " " + a.get('family', '') for a in authors])
+        #if authors is defined as a list, it will have the format [{'given': 'Name1', 'family': 'LastName1'}, {'given': 'Name2', 'family': 'LastName2'}, ... [{'given': 'NameN', 'family': 'LastNameN'}]
+        #We convert it into a string Name1 Lastname1 and Name2 Lastname2 and ... "
+        authors_string = " and ".join([ a.get('given', '') +  " " + a.get('family', '')  for a in authors if (('family' in a) or ('given' in a))])
         data['author'] = authors_string
     elif isinstance(authors,str):
+        #if instead authors is a string, then it is already in the right format
         data['author'] = authors
 
     #Create the bibtex entry as a string 
