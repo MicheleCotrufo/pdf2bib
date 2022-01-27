@@ -144,7 +144,6 @@ def pdf2bib_singlefile(filename):
         result['metadata'] = metadata
         result['bibtex'] = bibtex_makers.make_bibtex(metadata)
         logger.info(f"A valid BibTeX entry was generated.") 
-        #logger.info(result['bibtex'])
     else:
         result['metadata'] = None
         result['bibtex'] = None
