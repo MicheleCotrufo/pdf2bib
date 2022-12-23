@@ -121,7 +121,7 @@ def pdf2bib_singlefile(filename):
     logger = logging.getLogger("pdf2bib")
     logger.info(f"Trying to extract data to generate the BibTeX entry for the file: {filename}")  
     logger.info(f"Calling pdf2doi...") 
-    result = pdf2doi.pdf2doi_singlefile(filename)
+    result = pdf2doi.pdf2doi(filename)
     if result['identifier'] == None:
         logger.error("It was not possible to find a valid identifier for this file.")
         result['metadata'] = None
@@ -133,12 +133,14 @@ def pdf2bib_singlefile(filename):
         logger.error("The validation_info returned by pdf2doi is not a string or valid dictionary. It is not possible to extract BibTeX data.")
         return result
 
-    logger.info(f"pdf2doi found a valid identifier for this paper. Trying to parse the data obtained by pdf2doi into valid BibTeX data..") 
+    logger.info(f"pdf2doi found a valid identifier for this paper.") 
   
-    if result['identifier_type'] == 'DOI':
-        metadata = bibtex_makers.parse_bib_from_dxdoiorg(result['validation_info'], method=pdf2doi.config.get('method_dxdoiorg'))
-    if result['identifier_type'] == 'arxiv ID':
+    if result['identifier_type'] in ['arxiv ID','arxiv DOI']:
+        logger.info(f"Parsing the info returned by export.arxiv.org...")
         metadata = bibtex_makers.parse_bib_from_exportarxivorg(result['validation_info'])
+    elif result['identifier_type'] == 'DOI':
+        logger.info(f"Parsing the info returned by dx.doi.org...")
+        metadata = bibtex_makers.parse_bib_from_dxdoiorg(result['validation_info'], method=pdf2doi.config.get('method_dxdoiorg'))
 
     if metadata: #if retrieval of bibtex data was succesful, we add the fields to the result dictionary
         result['metadata'] = metadata
@@ -271,8 +273,8 @@ def main():
         return
     ## END
 
-    str_savebibtex = f"All bibtex entries found in {target} will be stored in the file {args.filename_bibtex }\n." if args.filename_bibtex else ''
-    str_copybibtex = f"All bibtex entries found in will be copied into the system clipboard\n." if  args.save_bibtex_clipboard else ''
+    str_savebibtex = f"All bibtex entries found in {target} will be stored in the file {args.filename_bibtex }.\n" if args.filename_bibtex else ''
+    str_copybibtex = f"All bibtex entries found in will be copied into the system clipboard.\n" if  args.save_bibtex_clipboard else ''
     if str_savebibtex or str_copybibtex:
         print(f"{str_savebibtex} {str_copybibtex}")
     if(args.verbose==False):
