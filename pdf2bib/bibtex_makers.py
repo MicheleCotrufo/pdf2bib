@@ -42,11 +42,17 @@ def parse_bib_from_dxdoiorg(text, method):
         data = bibtexparser.loads(text)
         metadata = data.entries[0]
         return metadata
-    if method == "application/citeproc+json":
-        json_dict = json.loads(text)
+    if method == "application/citeproc+json":        
+        try:
+            json_dict = json.loads(text)
+        except Exception as e:
+            print(f'A problem occurred when trying to parse the text: {e}') 
+            return None
+
         #I extract only certain fields from the JSON dict
         fields = ['title', 'volume', 'issue', 'page', 'publisher', 'URL', 'DOI']
         metadata = dict()
+
         for field in fields:
             try:
                 metadata[field.lower()] = json_dict[field] if field in json_dict.keys() else ''
@@ -56,6 +62,9 @@ def parse_bib_from_dxdoiorg(text, method):
             metadata['journal'] = json_dict["container-title"] 
         except:
             metadata['journal'] = ''
+
+        if (metadata['publisher'] == 'arXiv') and (metadata['journal'] == ''):
+            metadata['journal'] = 'arXiv'
 
         try:
             metadata['year'] = json_dict["issued"]['date-parts'][0][0]
