@@ -2,7 +2,7 @@
 
 ```pdf2bib``` is a Python library/command-line tool to extract bibliographic information from the .pdf file of a publication 
 (or from a folder containing several .pdf files), and automatically generate BibTeX entries. The pdf file can be either a paper published in a scientific journal (i.e. with
-a DOI associated to it), or an [arXiv](https://arxiv.org/about/donate) preprint.
+a DOI associated to it), or an [arXiv](https://arxiv.org/about/donate) preprint. The bibliographic information is retrieved by querying public archives, thus **an internet connection is required**.
 
 ```pdf2bib``` can be used either from [command line](#command-line-usage), or inside your [python script](#usage-inside-a-python-script) or, only for Windows, directly from the [right-click context menu](#installing-the-shortcuts-in-the-right-click-context-menu-of-windows) of a pdf file or a folder.
 
@@ -38,8 +38,7 @@ Under Windows, it is also possible to add [shortcuts to the right-click context 
 
 ## Description
 ```pdf2bib``` relies on the library [pdf2doi](https://github.com/MicheleCotrufo/pdf2doi), which can automatically find a valid identifier of a scientific publication (i.e. either a DOI or an arxiv ID)
-starting from a .pdf file. The identifier is also validated by querying public archives (e.g., http://dx.doi.org for DOIs and http://export.arxiv.org for arxiv IDs). 
-The validation process returns raw BibTeX data (see also [here](https://github.com/MicheleCotrufo/pdf2doi#usage-inside-a-python-script)), which is then used by
+starting from a .pdf file. ```pdf2doi``` will query public archives (e.g., http://dx.doi.org for DOIs and http://export.arxiv.org for arxiv IDs) in order to validate any identifier found. The validation process returns raw BibTeX data (see also [here](https://github.com/MicheleCotrufo/pdf2doi#usage-inside-a-python-script)), which is then used by
 ```pdf2bib``` to generate a valid BibTeX entry in the format
 ```
 @article{[LastNameFirstAuthor][PublicationYear][FirstWordTitle],
