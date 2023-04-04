@@ -12,7 +12,7 @@ a DOI associated to it), or an [arXiv](https://arxiv.org/about/donate) preprint.
 Use the package manager pip to install pdf2bib.
 
 ```bash
-pip install pdf2bib
+pip install pdf2bib==1.1rc4
 ```
 
 Under Windows, it is also possible to add [shortcuts to the right-click context menu](#installing-the-shortcuts-in-the-right-click-context-menu-of-windows).
