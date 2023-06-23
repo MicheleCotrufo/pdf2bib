@@ -178,7 +178,7 @@ def make_bibtex(metadata):
     id = id.lower()
     id = remove_latex_codes(id)
     id = unidecode(id) #This makes sure that the id of the bibtex entry is only made out of ascii characters (i.e. no accents, tildes, etc.)
-    id = id.replace('-','') #Make sure to remove any possible hyphen
+    id = re.sub('-|,', '', id) #Make sure to remove any possible hyphen and comma
     if id == '':
         id = 'NoValidID'
 
