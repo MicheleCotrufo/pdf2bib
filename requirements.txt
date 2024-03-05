@@ -1,4 +1,4 @@
 bibtexparser>=1.2.0
 pyperclip
 unidecode
-pdf2doi==1.5
+pdf2doi==1.5.1
