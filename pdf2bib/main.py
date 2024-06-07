@@ -138,9 +138,18 @@ def pdf2bib_singlefile(filename):
 
     logger.info(f"pdf2doi found a valid identifier for this paper.") 
   
-    if result['identifier_type'] in ['arxiv ID','arxiv DOI']:
+    if result["identifier_type"] == "arxiv ID":
         logger.info(f"Parsing the info returned by export.arxiv.org...")
-        metadata = bibtex_makers.parse_bib_from_exportarxivorg(result['validation_info'])
+        metadata = bibtex_makers.parse_bib_from_exportarxivorg(
+            result["validation_info"]
+        )
+    elif result["identifier_type"] == "arxiv DOI":
+        if "arxiv_doi" not in result["validation_info"]:
+            result["validation_info"]["arxiv_doi"] = result["identifier"]
+        logger.info(f"Parsing the info returned by export.arxiv.org...")
+        metadata = bibtex_makers.parse_bib_from_exportarxivorg(
+            result["validation_info"]
+        )
     elif result['identifier_type'] == 'DOI':
         logger.info(f"Parsing the info returned by dx.doi.org...")
         metadata = bibtex_makers.parse_bib_from_dxdoiorg(result['validation_info'], method=pdf2doi.config.get('method_dxdoiorg'))
