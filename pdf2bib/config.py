@@ -4,7 +4,8 @@ import logging
 
 class config():
     __params={'verbose'   :   True,
-            'separator' : os.path.sep
+            'separator' : os.path.sep,
+            'save_identifier_metadata' : True
             }
     __setters = __params.keys()
 
