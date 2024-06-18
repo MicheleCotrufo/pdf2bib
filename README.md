@@ -6,6 +6,9 @@ a DOI associated to it), or an [arXiv](https://arxiv.org/about/donate) preprint.
 
 ```pdf2bib``` can be used either from [command line](#command-line-usage), or inside your [python script](#usage-inside-a-python-script) or, only for Windows, directly from the [right-click context menu](#installing-the-shortcuts-in-the-right-click-context-menu-of-windows) of a pdf file or a folder.
 
+[![Downloads](https://pepy.tech/badge/pdf2bib)](https://pepy.tech/project/pdf2bib?versions=1.0.2&versions=1.1&versions=1.2)[![Downloads](https://pepy.tech/badge/pdf2bib/month)](https://pepy.tech/project/pdf2bib?versions=1.0.2&versions=1.1&versions=1.2)
+[![Pip Package](https://img.shields.io/pypi/v/pdf2bib?logo=PyPI)](https://pypi.org/project/pdf2bib?versions=1.2)
+
 ## Latest stable version
 The latest stable version of ```pdf2bib``` is the **1.2**. See [here](https://github.com/MicheleCotrufo/pdf2bib/releases) for the full change log.
 
@@ -29,8 +32,7 @@ pip install pdf2bib==1.2
 
 Under Windows, it is also possible to add [shortcuts to the right-click context menu](#installing-the-shortcuts-in-the-right-click-context-menu-of-windows).
 
-[![Downloads](https://pepy.tech/badge/pdf2bib)](https://pepy.tech/project/pdf2bib?versions=1.0&versions=1.0.1&versions=1.0.2)[![Downloads](https://pepy.tech/badge/pdf2bib/month)](https://pepy.tech/project/pdf2bib?versions=1.0&versions=1.0.1&versions=1.0.2)
-[![Pip Package](https://img.shields.io/pypi/v/pdf2bib?logo=PyPI)](https://pypi.org/project/pdf2bib?versions=1.0.2)
+
 
 ## Table of Contents
  - [Installation](#installation)
