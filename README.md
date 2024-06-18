@@ -7,7 +7,7 @@ a DOI associated to it), or an [arXiv](https://arxiv.org/about/donate) preprint.
 ```pdf2bib``` can be used either from [command line](#command-line-usage), or inside your [python script](#usage-inside-a-python-script) or, only for Windows, directly from the [right-click context menu](#installing-the-shortcuts-in-the-right-click-context-menu-of-windows) of a pdf file or a folder.
 
 ## Latest stable version
-The latest stable version of ```pdf2doi``` is the **1.2**. See [here](https://github.com/MicheleCotrufo/pdf2bib/releases) for the full change log.
+The latest stable version of ```pdf2bib``` is the **1.2**. See [here](https://github.com/MicheleCotrufo/pdf2bib/releases) for the full change log.
 
 ### [v1.2] - 2024-06-18
 
