@@ -9,7 +9,7 @@ with open("requirements.txt") as f:
     required_packages = f.read().splitlines()
 
 setuptools.setup(name='pdf2bib',
-      version='1.1',
+      version='1.2',
       description='A  python library/command-line tool to quickly and automatically generate BibTeX data starting from the pdf file of a scientific publication.',
       long_description=long_description,
       long_description_content_type='text/markdown',
