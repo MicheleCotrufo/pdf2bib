@@ -6,6 +6,9 @@ import pdf2bib.config as config
 import pdf2doi as pdf2doi
 #import pyperclip (Modules that are commented here are imported later only when needed, to improve start up time)
 
+#We tell pdf2doi to use the same value of save_identifier_metadata specified in the settings of pdf2bib. When pdf2bib is called via command line, 
+#the value of save_identifier_metadata (for both pdf2doi and pdf2bib) might get changed
+pdf2doi.config.set('save_identifier_metadata',config.get('save_identifier_metadata')) 
 
 def pdf2bib(target):
     ''' 
@@ -232,6 +235,10 @@ def main():
                         "--verbose",
                         help="Increase verbosity. By default (i.e. when not using -v), only the text of the found bibtex entries will be printed as output.",
                         action="store_true")
+    parser.add_argument("-nostore",
+                    "--no_store_identifier_metadata",
+                    help="pdf2bib uses the library pdf2doi to find the DOI/identifier of a publication. By default, anytime an identifier is found, pdf2doi also adds it to the metadata of the pdf file (if not present yet). By using this additional option, the identifier is not stored in the file metadata.",
+                    action="store_true")
     parser.add_argument("-s",
                         "--make_bibtex_file",
                         dest="filename_bibtex",
@@ -284,6 +291,9 @@ def main():
         print("pdf2bib: error: the following arguments are required: path. Type \'pdf2bib --h\' for a list of commands.")
         return
     ## END
+    
+    config.set('save_identifier_metadata', not (args.no_store_identifier_metadata))
+    pdf2doi.config.set('save_identifier_metadata',config.get('save_identifier_metadata')) 
 
     str_savebibtex = f"All bibtex entries found in {target} will be stored in the file {args.filename_bibtex }.\n" if args.filename_bibtex else ''
     str_copybibtex = f"All bibtex entries found in will be copied into the system clipboard.\n" if  args.save_bibtex_clipboard else ''
@@ -292,6 +302,7 @@ def main():
     if(args.verbose==False):
         print(f"(All intermediate output will be suppressed. To see additional outuput, use the command -v)")
     results = pdf2bib(target=target)
+    
 
     if not results:
         return
