@@ -6,13 +6,25 @@ a DOI associated to it), or an [arXiv](https://arxiv.org/about/donate) preprint.
 
 ```pdf2bib``` can be used either from [command line](#command-line-usage), or inside your [python script](#usage-inside-a-python-script) or, only for Windows, directly from the [right-click context menu](#installing-the-shortcuts-in-the-right-click-context-menu-of-windows) of a pdf file or a folder.
 
+## Latest stable version
+The latest stable version of ```pdf2doi``` is the **1.2**. See [here](https://github.com/MicheleCotrufo/pdf2bib/releases) for the full change log.
+
+### [v1.2] - 2024-06-18
+
+#### Main changes
+- Added the CLI option ```-nostore```, which allows the user to opt out of the default behaviour of ```pdf2doi``` regarding storing the found identifier into the pdf metadata. When ```-nostore``` is added to the CLI invokation of ```pdf2bib```, the pdf files will not be modified by ```pdf2doi```.
+
+#### Added
+- Make sure entry id can not contain commas https://github.com/MicheleCotrufo/pdf2bib/pull/8.
+- Make sure that the input variable target is converted to a string before processing, and Fix trailing colon for some PDF files https://github.com/MicheleCotrufo/pdf2bib/pull/16.
+
 
 ## Installation
 
 Use the package manager pip to install pdf2bib.
 
 ```bash
-pip install pdf2bib==1.1
+pip install pdf2bib==1.2
 ```
 
 Under Windows, it is also possible to add [shortcuts to the right-click context menu](#installing-the-shortcuts-in-the-right-click-context-menu-of-windows).
