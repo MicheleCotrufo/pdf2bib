@@ -300,7 +300,7 @@ def main():
     if str_savebibtex or str_copybibtex:
         print(f"{str_savebibtex} {str_copybibtex}")
     if(args.verbose==False):
-        print(f"(All intermediate output will be suppressed. To see additional outuput, use the command -v)")
+        print(f"(All intermediate output will be suppressed. To see additional output, use the command -v)")
     results = pdf2bib(target=target)
     
 
