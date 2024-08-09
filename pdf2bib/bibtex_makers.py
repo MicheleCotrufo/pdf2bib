@@ -110,7 +110,7 @@ def parse_bib_from_exportarxivorg(items):
     data_dict['doi'] = data_dict.pop('arxiv_doi')       
     #parse the published data to get the year, month and day
     if data_dict['published']:
-        regexDate = re.search('(\d{4}\-\d{2}\-\d{2})',data_dict['published'],re.I)
+        regexDate = re.search(r'(\d{4}\-\d{2}\-\d{2})',data_dict['published'],re.I)
         if regexDate:
             date_list =  (regexDate.group(1)).split("-")
             year = date_list[0] if len(date_list)>0 else '0000'
