@@ -206,7 +206,7 @@ usage: pdf2bib [-h] [-v] [-nostore] [-s FILENAME_BIBTEX] [-clip] [-install--righ
 Generate BibTeX entries of scientific publications starting from the pdf files. It requires an internet connection.
 
 positional arguments:
-  path                  Relative path of the target pdf file or of the targe folder.
+  path                  Relative path of the target pdf file or of the target folder.
 
 options:
   -h, --help            show this help message and exit

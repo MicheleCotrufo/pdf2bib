@@ -228,7 +228,7 @@ def main():
             epilog = "")
 
     parser.add_argument("path",
-                        help = "Relative path of the target pdf file or of the targe folder.",
+                        help = "Relative path of the target pdf file or of the target folder.",
                         metavar = "path",
                         nargs = '*')
     parser.add_argument("-v",
